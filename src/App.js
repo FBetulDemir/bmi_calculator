@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,11 +9,12 @@ function App() {
   const [weight, setWeight] = useState('');
   const [bmiValue, setBmiValue] = useState('');
   const [resultText, setResultText] = useState('');
+  const [showResult, setShowResult] = useState (false);
 
-  const Calculate = () => {
+  const calculateBmi = () => {
     if (height && weight){
       const heightInMeters = height/100;
-      const bmi = weight / (heightInMeters * heightInMeters);
+      const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
       setBmiValue(bmi);
 
       let message = "";
@@ -26,15 +27,17 @@ function App() {
       } else { 
           message = 'You are Obese'; 
       }
-      
+      setShowResult(true);
       setResultText(message); 
-        } else { 
-            setBmiValue(''); 
-            setResultText(''); 
-        } 
+
+    } else { 
+        setBmiValue(''); 
+        setResultText(''); 
+        setShowResult(false);
+     
     }
 
-  }
+  };
 
   return (
     <div className="App">
@@ -57,7 +60,12 @@ function App() {
           onChange={(e) => setWeight(e.target.value)}
         />
       </div>
-      <Button variant="secondary">Calculate</Button>{' '}
+      <Button variant="secondary" onClick={calculateBmi}>Calculate</Button>{' '}
+      {showResult && (
+        <div className="result">
+          <p>Your BMI is: {bmiValue}</p>
+          <p>{resultText}</p>
+        </div>)}
     </div>
   );
 }
